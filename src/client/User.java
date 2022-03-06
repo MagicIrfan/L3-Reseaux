@@ -4,9 +4,8 @@ public class User {
     private String name;
     private boolean isConnected;
 
-    public User(String name, boolean isConnected){
-        this.name = name;
-        this.isConnected = isConnected;
+    public User(String name){
+        this.name = "@"+name;
     }
 
     public void connect(){
@@ -15,5 +14,9 @@ public class User {
 
     public void disconnect(){
         isConnected = false;
+    }
+
+    public String getName(){
+        return name;
     }
 }
