@@ -1,22 +1,20 @@
 package client;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String name;
-    private boolean isConnected;
 
     public User(String name){
         this.name = "@"+name;
     }
 
-    public void connect(){
-        isConnected = true;
-    }
-
-    public void disconnect(){
-        isConnected = false;
-    }
-
     public String getName(){
+        return name;
+    }
+
+    @Override
+    public String toString(){
         return name;
     }
 }

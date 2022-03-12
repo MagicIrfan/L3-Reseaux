@@ -16,7 +16,7 @@ public abstract class Client {
         this.reader = new BufferedReader(new InputStreamReader(System.in));
         InetAddress host = InetAddress.getByName("localhost");
         Socket socket = new Socket(host, 12345);
-        stream = new Stream(socket);
+        this.stream = new Stream(socket);
     }
 
     public abstract void compute();

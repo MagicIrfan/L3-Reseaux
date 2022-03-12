@@ -1,38 +1,36 @@
 package server;
 import java.net.*;
 
-import message.Message;
-import process.*;
-import requests.*;
+import client.User;
+import packet.Packet;
+import process.flux.ProcessConnect;
+import process.Process;
+import process.flux.ProcessSubscribe;
+import process.flux.ProcessUnsubscribe;
+import process.request.*;
+import sendable.Sendable;
 import response.*;
+import sendable.flux.SubscribeFlux;
 import stream.Stream;
 
 import java.io.*;
 import java.util.*;
 
-public class SocketHandler implements Runnable{
-
-    private final Socket socket;
-    private static final Database database = new Database();
-    private static long id = 0;
+public class SocketHandler extends Handler{
 
     public SocketHandler(Socket socket){
-        this.socket = socket;
+        super(socket);
     }
-
-    public long getNextId(){
-        id+=1;
-        return id;
-    }
-
 
     @Override
     public void run(){
         try
         {
             Stream stream = new Stream(socket);
-            Request request = (Request) stream.getData();
-            String strRequest = request.getName().toString();
+            Packet packet = (Packet) stream.getData();
+            User user = packet.getUser();
+            Sendable request = packet.getSendable();
+            String strRequest = request.getName();
             Response response = null;
             switch(strRequest){
                 case "PUBLISH" -> {
@@ -57,13 +55,31 @@ public class SocketHandler implements Runnable{
                     ProcessRequest processRequest = new ProcessRepublish(database);
                     response = processRequest.getResponse(request);
                 }
+                case "CONNECT" ->{
+                    Process process = new ProcessConnect(subscribers,user);
+                    response = process.getResponse(request);
+
+                }
+                case "SUBSCRIBE" ->{
+                    SubscribeFlux flux = (SubscribeFlux) request;
+                    User user2 = new User(flux.getName());
+                    Process process = new ProcessSubscribe(subscribers,user,user2);
+                    response = process.getResponse(request);
+
+                }
+                case "UNSUBSCRIBE" ->{
+                    SubscribeFlux flux = (SubscribeFlux) request;
+                    User user2 = new User(flux.getName());
+                    Process process = new ProcessUnsubscribe(subscribers,user,user2);
+                    response = process.getResponse(request);
+
+                }
                 default -> {}
 
             }
             stream.writeData(response);
+
             System.out.println("Envoi de la réponse ...");
-
-
         }
         catch(IOException | ClassNotFoundException e)
         {

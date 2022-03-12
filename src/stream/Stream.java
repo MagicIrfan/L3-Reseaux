@@ -17,6 +17,7 @@ public class Stream {
         this.outputStream = this.socket.getOutputStream();
         this.objectOutputStream = new ObjectOutputStream(this.outputStream);
         this.objectInputStream = new ObjectInputStream(this.inputStream);
+
     }
 
     public Object getData() throws IOException, ClassNotFoundException {
@@ -24,8 +25,11 @@ public class Stream {
     }
 
     public void writeData(Object object) throws IOException {
+        objectOutputStream.reset();
         objectOutputStream.writeObject(object);
+
     }
+
 
     public Socket getSocket(){
         return socket;

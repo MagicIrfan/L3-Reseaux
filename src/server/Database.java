@@ -1,8 +1,6 @@
 package server;
-import Tools.Null;
 import message.Message;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Database {
     private List<Message> messages;
@@ -18,7 +16,7 @@ public class Database {
     public List<Long> getIds(String author, String tag, long since, long limit){
 
         List<Message> listMessages = messages.stream()
-                .filter(m -> m.getAuthor().equals(author) || m.getTags().contains(tag) || since < m.getId())
+                .filter(m -> (m.getAuthor().equals(author) || m.getTags().contains(tag)) && since < m.getId())
                 .limit(limit)
                 .toList();
 
