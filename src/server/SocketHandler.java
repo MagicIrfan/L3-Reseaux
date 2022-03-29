@@ -1,6 +1,7 @@
 package server;
 import java.net.*;
 
+import action.server.*;
 import client.User;;
 import message.Message;
 import process.flux.ProcessConnect;
@@ -11,9 +12,11 @@ import process.flux.ProcessUnsubscribe;
 import process.request.*;
 import sendable.Sendable;
 import response.*;
+import sendable.flux.ConnectFlux;
 import sendable.flux.ShowMsgFlux;
 import sendable.flux.SubscribeFlux;
 import sendable.flux.UnsubscribeFlux;
+import sendable.requests.RepublishRequest;
 import server.data.Database;
 import stream.Stream;
 
@@ -25,6 +28,7 @@ public class SocketHandler implements Runnable{
     private Stream stream;
     private Database database;
     private MicroblogAMUCentral parent;
+    private ServerAction action;
 
     public SocketHandler(Socket socket, Database database, MicroblogAMUCentral parent) throws IOException {
         this.socket = socket;
@@ -33,6 +37,9 @@ public class SocketHandler implements Runnable{
         this.parent = parent;
     }
 
+    public void setAction(ServerAction action){
+        this.action = action;
+    }
 
     @Override
     public void run(){
@@ -46,78 +53,50 @@ public class SocketHandler implements Runnable{
                 Response response = null;
                 switch (strRequest) {
                     case "PUBLISH" -> {
-                        long randomID = MicroblogAMUCentral.getNextId();
-                        User newUser = database.getConnectedUser(user);
-                        ProcessRequest process = new ProcessPublish(randomID, database,newUser);
-                        response = process.getResponse(request);
-                        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-                            parent.sendMessagesToClient(user);
-                        stream.writeData(response);
+                        setAction(new PublishServerAction(database,request,user,parent,stream));
+                        action.doAction();
                     }
                     case "RCV_MSG" -> {
-                        ProcessRequest processRequest = new ProcessRcvMsg(database);
-                        response = processRequest.getResponse(request);
-                        stream.writeData(response);
+                        setAction(new RcvMsgServerAction(database,request,stream));
+                        action.doAction();
 
                     }
                     case "RCV_IDS" -> {
-                        ProcessRequest processRequest = new ProcessRcvIds(database);
-                        response = processRequest.getResponse(request);
-                        stream.writeData(response);
+                        setAction(new RcvIdsServerAction(database,request,stream));
+                        action.doAction();
                     }
                     case "REPLY" -> {
-                        ProcessRequest processRequest = new ProcessReply(database, MicroblogAMUCentral.getNextId());
-                        response = processRequest.getResponse(request);
-                        User newUser = database.getConnectedUser(user);
-                        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-                            parent.sendMessagesToClient(user);
-                        stream.writeData(response);
+                        setAction(new ReplyServerAction(database,request,stream,user,parent));
+                        action.doAction();
                     }
                     case "REPUBLISH" -> {
-                        ProcessRequest processRequest = new ProcessRepublish(database);
-                        response = processRequest.getResponse(request);
-                        User newUser = database.getConnectedUser(user);
-                        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-                            parent.sendMessagesToClient(user);
-                        stream.writeData(response);
+                        setAction(new RepublishServerAction(database,request,stream,user,parent));
+                        action.doAction();
 
                     }
                     case "CONNECT" -> {
-                        Process process = new ProcessConnect(database,user);
-                        response = process.getResponse(request);
-                        if(response instanceof ConfirmationResponse)
-                            parent.getUserStream().put(database.getConnectedUser(user),stream);
-                        stream.writeData(response);
+                        setAction(new ConnectServerAction(database,request,user,parent.getUserStream(),stream));
+                        action.doAction();
 
                     }
                     case "SUBSCRIBE" -> {
-                        SubscribeFlux flux = (SubscribeFlux) request;
-                        Socket userSocket = database.getSocketWithName(flux.getReceiver());
-                        User user2 = new User(flux.getReceiver(),userSocket);
-                        Process process = new ProcessSubscribe(database,user,user2);
-                        response = process.getResponse(request);
-                        stream.writeData(response);
+                        setAction(new SubscribeServerAction(database,request,stream,user));
+                        action.doAction();
 
                     }
                     case "UNSUBSCRIBE" -> {
-                        UnsubscribeFlux flux = (UnsubscribeFlux) request;
-                        Socket userSocket = database.getSocketWithName(flux.getReceiver());
-                        User user2 = new User(flux.getReceiver(),userSocket);
-                        Process process = new ProcessUnsubscribe(database,user, user2);
-                        response = process.getResponse(request);
-                        stream.writeData(response);
+                        setAction(new UnSubscribeServerAction(database,request,stream,user));
+                        action.doAction();
 
                     }
                     case "SHOW_MSG" -> {
-                        ShowMsgFlux flux = (ShowMsgFlux) request;
-                        Process process = new ProcessShowMsg(database,user);
-                        response = process.getResponse(request);
-                        stream.writeData(response);
+                        setAction(new ShowMessagesServerAction(database,request,stream,user));
+                        action.doAction();
                     }
                     default -> {}
 
                 }
-                System.out.println("Envoi de la réponse ...");
+                System.out.println("Envoi de la réponse " + response);
             }
         }
         catch(IOException | ClassNotFoundException | InterruptedException e)

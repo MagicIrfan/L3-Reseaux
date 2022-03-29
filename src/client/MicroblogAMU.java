@@ -1,13 +1,11 @@
 package client;
 
 import Tools.Options;
-import client.action.*;
-import threads.DataReceiver;
+import action.client.*;
+import client.threads.DataReceiver;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class MicroblogAMU extends Client {
 
@@ -22,6 +20,9 @@ public class MicroblogAMU extends Client {
         new Thread(receiver).start();
         this.action = new ConnectAction(stream,userName);
         action.doAction();
+        this.compute();
+        Socket socket = this.getSocket();
+        socket.close();
     }
 
     public void setAction(ClientAction action){
@@ -84,9 +85,6 @@ public class MicroblogAMU extends Client {
 
     public static void main(String [] args) throws IOException, ClassNotFoundException {
         Client amu = new MicroblogAMU();
-        amu.compute();
-        Socket socket = amu.getSocket();
-        socket.close();
     }
 
 }

@@ -41,13 +41,6 @@ public class Stream {
         return objectInputStream;
     }
 
-    public OutputStream getOutputStream() throws IOException {
-        return socket.getOutputStream();
-    }
-
-    public InputStream getInputStream() throws IOException {
-        return socket.getInputStream();
-    }
 
     public Socket getSocket(){
         return socket;

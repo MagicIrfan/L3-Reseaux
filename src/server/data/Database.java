@@ -7,41 +7,40 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class Database {
-    private List<Message> messages;
-    private List<User> listUsers;
-    private ConcurrentSkipListMap<User, List<User>> subscribers;
-    private ConcurrentHashMap<User, List<Message>> messagesMap;
-    private ConcurrentHashMap<User, List<Message>> messagesToSend;
+    private Deque<Message> messages;
+    private Deque<User> listUsers;
+    private ConcurrentSkipListMap<User, Deque<User>> subscribers;
+    private ConcurrentHashMap<User, Deque<Message>> messagesMap;
+    private ConcurrentHashMap<User, Deque<Message>> messagesToSend;
 
 
     public Database(){
-        this.messages = new ArrayList<>();
-        this.listUsers = new ArrayList<>();
+        this.messages = new ConcurrentLinkedDeque<>();
+        this.listUsers = new ConcurrentLinkedDeque<>();
         this.subscribers = new ConcurrentSkipListMap<>();
         this.messagesMap = new ConcurrentHashMap<>();
         this.messagesToSend = new ConcurrentHashMap<>();
     }
 
-    public ConcurrentHashMap<User, List<Message>> getReceivedMessages(){
+    public ConcurrentHashMap<User, Deque<Message>> getReceivedMessages(){
         return messagesToSend;
     }
 
     public void setReceivedMessages (User user){
 
         User connectedUser = getConnectedUser(user);
-        ConcurrentHashMap<User, List<Message>> messages = messagesMap;
-        ConcurrentSkipListMap<User,List<User>> listUsers = subscribers;
-        List<User> subscribers = listUsers.get(connectedUser);
-        boolean sent = false;
+        ConcurrentHashMap<User, Deque<Message>> messages = messagesMap;
+        ConcurrentSkipListMap<User,Deque<User>> listUsers = subscribers;
 
-        for(Map.Entry<User,List<User>> entry : listUsers.entrySet()){
+        for(Map.Entry<User,Deque<User>> entry : listUsers.entrySet()){
             User connectedSubscriber = getConnectedUser(entry.getKey());
-            List<User> oui = entry.getValue();
+            Deque<User> oui = entry.getValue();
             if(oui.contains(connectedUser)){
-                List<Message> allMessages = messages.get(connectedUser);
+                Deque<Message> allMessages = messages.get(connectedUser);
                 messagesToSend.get(connectedSubscriber).addAll(allMessages);
             }
         }
@@ -52,11 +51,11 @@ public class Database {
         messages.add(message);
     }
 
-    public ConcurrentHashMap<User, List<Message>> getMessagesMap(){
+    public ConcurrentHashMap<User, Deque<Message>> getMessagesMap(){
         return messagesMap;
     }
 
-    public ConcurrentSkipListMap<User, List<User>> getSubscribers() {
+    public ConcurrentSkipListMap<User, Deque<User>> getSubscribers() {
         return subscribers;
     }
 
@@ -65,13 +64,13 @@ public class Database {
     }
 
     public void connectUser(User user){
-        subscribers.put(user,new ArrayList<>());
-        messagesMap.put(user,new ArrayList<>());
-        messagesToSend.put(user,new ArrayList<>());
+        subscribers.put(user,new ConcurrentLinkedDeque<>());
+        messagesMap.put(user,new ConcurrentLinkedDeque<>());
+        messagesToSend.put(user,new ConcurrentLinkedDeque<>());
     }
 
     public User getConnectedUser(User client){
-        for(Map.Entry<User,List<User>> entry : subscribers.entrySet()){
+        for(Map.Entry<User,Deque<User>> entry : subscribers.entrySet()){
             User user = entry.getKey();
             if(user.getName().equals(client.getName()))
                 return user;
