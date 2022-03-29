@@ -1,13 +1,12 @@
 package process.request;
 
 import message.Message;
-import process.request.ProcessRequest;
 import sendable.Sendable;
 import sendable.requests.ReplyRequest;
 import response.ConfirmationResponse;
 import response.ErrorResponse;
 import response.Response;
-import server.Database;
+import server.data.Database;
 
 public class ProcessReply extends ProcessRequest {
 
@@ -22,16 +21,15 @@ public class ProcessReply extends ProcessRequest {
     @Override
     public Response getResponse(Sendable receiver) {
         ReplyRequest replyRequest = (ReplyRequest) receiver;
-        Response response;
+
         if(!database.idExists(replyRequest.getId())){
-            response = new ErrorResponse("l'ID n'existe pas");
+            return new ErrorResponse("l'ID " + replyRequest.getId() + " n'existe pas");
         }
-        else{
-            Message message = new Message(id,replyRequest.getAuthor(),replyRequest.getBody(),replyRequest.getTags());
-            database.addMessage(message);
-            response = new ConfirmationResponse();
-            System.out.println(message);
-        }
-        return response;
+
+        Message message = new Message(id,replyRequest.getSender(),replyRequest.getBody(),replyRequest.getTags());
+        database.addMessage(message);
+        System.out.println(message);
+        return new ConfirmationResponse();
+
     }
 }

@@ -5,27 +5,24 @@ import response.ConfirmationResponse;
 import response.ErrorResponse;
 import response.Response;
 import sendable.Sendable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import server.data.Database;
 
 public class ProcessConnect extends ProcessFlux{
 
-    public ProcessConnect(Map<User, List<User>> subscribers, User user) {
-        super(subscribers,user);
+    public ProcessConnect(Database database,User user) {
+        super(database,user);
     }
 
     @Override
     public Response getResponse(Sendable sendable) {
-        Response response = null;
-        if(!subscribers.containsKey(user)){
-            subscribers.put(user,new ArrayList<>());
-            response = new ConfirmationResponse();
+        if(database.userExists(client)) {
+            return new ErrorResponse("L'utilisateur " + client + " est déjà connecté !");
         }
-        else {
-            response = new ErrorResponse("Utilisateur déjà connecté !");
+        else{
+            database.addUser(client);
+            database.connectUser(client);
         }
-        return response;
+
+        return new ConfirmationResponse();
     }
 }

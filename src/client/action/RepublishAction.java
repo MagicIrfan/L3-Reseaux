@@ -6,13 +6,15 @@ import sendable.requests.RepublishRequest;
 import sendable.requests.Request;
 import stream.Stream;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 public class RepublishAction extends ClientAction{
 
 
-    public RepublishAction(Stream stream, User user) throws IOException {
+    public RepublishAction(Stream stream, String user) throws IOException {
         super(stream, user);
     }
 
@@ -26,12 +28,11 @@ public class RepublishAction extends ClientAction{
                 since = Long.parseLong(strSince);
         }
 
-        Request request = new RepublishRequest(since,user.getName());
-        //stream.writeData(request);
-        sendPacket(request);
+        Request request = new RepublishRequest(since,userName);
+        stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
 
-        Response response =  (Response) stream.getData();
-        System.out.println(response);
+        /*Response response = (Response) stream.getData();
+        System.out.println(response);*/
     }
 }

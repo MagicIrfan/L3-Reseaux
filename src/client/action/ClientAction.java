@@ -1,7 +1,6 @@
 package client.action;
 
 import client.User;
-import packet.Packet;
 import sendable.Sendable;
 import stream.Stream;
 
@@ -13,17 +12,14 @@ import java.net.Socket;
 public abstract class ClientAction {
 
     protected Stream stream;
-    protected User user;
+    protected String userName;
     protected final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    public ClientAction(Stream stream,User user) throws IOException {
+
+    public ClientAction(Stream stream,String userName) throws IOException {
         this.stream = stream;
-        this.user = user;
+        this.userName = userName;
     }
 
-    public void sendPacket(Sendable sendable) throws IOException {
-        Packet packet = new Packet(user,sendable);
-        stream.writeData(packet);
-    }
 
     public abstract void doAction() throws IOException, ClassNotFoundException;
 }

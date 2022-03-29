@@ -4,17 +4,16 @@ import client.User;
 import process.Process;
 import response.Response;
 import sendable.Sendable;
-
-import java.util.*;
+import server.data.Database;
 
 public abstract class ProcessFlux implements Process {
 
-    protected User user;
-    protected Map<User, List<User>> subscribers;
+    protected User client;
+    protected Database database;
 
-    public ProcessFlux(Map<User, List<User>> subscribers, User user){
-        this.subscribers = subscribers;
-        this.user = user;
+    public ProcessFlux(Database database,User client){
+        this.database = database;
+        this.client = client;
     }
 
     @Override

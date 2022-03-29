@@ -8,17 +8,18 @@ public class RepublishRequest extends Request{
     private long id;
 
     public RepublishRequest(long id, String author) {
-        super("REPUBLISH author:"+author + " msg_id:"+id, RequestName.REPUBLISH);
+        super("REPUBLISH author:"+author + " msg_id:"+id, RequestName.REPUBLISH,author);
         this.id = id;
         this.author = author;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
     public long getId() {
         return id;
+    }
+
+    @Override
+    public String getSender() {
+        return author;
     }
 }
 

@@ -1,21 +1,26 @@
 package client;
 
-import Tools.ManyOptions;
-import Tools.Name;
+import Tools.Options;
 import client.action.*;
+import threads.DataReceiver;
+
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class MicroblogAMU extends Client implements ManyOptions{
+public class MicroblogAMU extends Client {
 
-    private static boolean isRunning =true;
-    private User user;
+    private boolean isRunning;
     private ClientAction action;
+    private final DataReceiver receiver;
 
     public MicroblogAMU() throws IOException, ClassNotFoundException {
         super();
-        this.user = new User(Name.getName());
-        this.action = new ConnectAction(stream,user);
+        this.isRunning = true;
+        this.receiver = new DataReceiver(stream);
+        new Thread(receiver).start();
+        this.action = new ConnectAction(stream,userName);
         action.doAction();
     }
 
@@ -24,79 +29,64 @@ public class MicroblogAMU extends Client implements ManyOptions{
     }
 
 
-    @Override
-    public void showOptions() {
-        System.out.println("Options : ");
-        System.out.println("P - Publier un message");
-        System.out.println("I - Recevoir les id de message");
-        System.out.println("M - Recevoir un message");
-        System.out.println("R - Répondre à un message");
-        System.out.println("S - Republier un message");
-        System.out.println("A - S'abonner à un utilisateur");
-        System.out.println("B - Se désabonner à un utilisateur");
-        System.out.println("Q - Quitter");
-    }
 
-
-    public void compute() {
+    public void compute(){
         try{
-            showOptions();
-            char response;
-            do{
-                response = reader.readLine().charAt(0);
-                switch(response){
-                    case 'P'->{
-                        setAction(new PublishAction(stream,user));
-                        action.doAction();
-                        isRunning = false;
-                    }
-                    case 'S' ->{
-                        setAction(new RepublishAction(stream,user));
-                        action.doAction();
-                        isRunning = false;
-                    }
-                    case 'I'->{
-                        setAction(new RcvIdsAction(stream,user));
-                        action.doAction();
-                        isRunning = false;
-                    }
-                    case 'R'->{
-                        setAction(new ReplyAction(stream,user));
-                        action.doAction();
-                        isRunning = false;
-                    }
-                    case 'M' ->{
-                        setAction(new RcvMsgAction(stream,user));
-                        action.doAction();
-                        isRunning = false;
-                    }
-                    case 'A' ->{
-                        setAction(new SubscribeAction(stream,user));
+            String response;
+            do {
+
+                response = reader.readLine();
+                switch (response) {
+                    case "P" -> {
+                        setAction(new PublishAction(stream, userName));
                         action.doAction();
                     }
-                    case 'B' ->{
-                        setAction(new UnSubscribeAction(stream,user));
+                    case "S" -> {
+                        setAction(new RepublishAction(stream, userName));
                         action.doAction();
                     }
-                    case 'Q' -> isRunning = false;
-                    default->showOptions();
+                    case "I" -> {
+                        setAction(new RcvIdsAction(stream, userName));
+                        action.doAction();
+                    }
+                    case "R" -> {
+                        setAction(new ReplyAction(stream, userName));
+                        action.doAction();
+                    }
+                    case "M" -> {
+                        setAction(new RcvMsgAction(stream, userName));
+                        action.doAction();
+                    }
+                    case "A" -> {
+                        setAction(new SubscribeAction(stream, userName));
+                        action.doAction();
+                    }
+                    case "B" -> {
+                        setAction(new UnSubscribeAction(stream, userName));
+                        action.doAction();
+                    }
+                    case "C" ->{
+                        setAction(new ShowMessagesAction(stream,userName));
+                        action.doAction();
+                    }
+                    case "Q" -> isRunning = false;
+                    default -> System.out.println(Options.getOptions());
                 }
             }
-            while(response != 'Q' && isRunning);
-        }
-        catch(IOException | ClassNotFoundException exception){
+            while (isRunning);
+
+        } catch (IOException | ClassNotFoundException exception) {
             exception.printStackTrace();
         }
+
 
     }
 
     public static void main(String [] args) throws IOException, ClassNotFoundException {
         Client amu = new MicroblogAMU();
         amu.compute();
-        Socket socket = amu.stream.getSocket();
+        Socket socket = amu.getSocket();
         socket.close();
     }
-
-
 
 }

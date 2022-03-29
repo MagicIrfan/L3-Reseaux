@@ -6,4 +6,5 @@ import java.util.*;
 public interface Sendable extends Serializable {
    String getName();
    String toString();
+   String getSender();
 }

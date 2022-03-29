@@ -5,19 +5,22 @@ import java.net.*;
 
 public class Stream {
 
-    private Socket socket;
-    private InputStream inputStream;
-    private OutputStream outputStream;
-    private ObjectOutputStream objectOutputStream;
-    private ObjectInputStream objectInputStream;
+    private final Socket socket;
+    private final ObjectOutputStream objectOutputStream;
+    private final ObjectInputStream objectInputStream;
 
     public Stream(Socket socket) throws IOException {
         this.socket = socket;
-        this.inputStream = this.socket.getInputStream();
-        this.outputStream = this.socket.getOutputStream();
-        this.objectOutputStream = new ObjectOutputStream(this.outputStream);
-        this.objectInputStream = new ObjectInputStream(this.inputStream);
+        this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        this.objectOutputStream.flush();
+        this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+    }
 
+    public Stream(Stream stream) throws IOException {
+        this.socket = stream.getSocket();
+        this.objectOutputStream = stream.getObjectOutputStream();
+        this.objectOutputStream.flush();
+        this.objectInputStream = stream.getObjectInputStream();
     }
 
     public Object getData() throws IOException, ClassNotFoundException {
@@ -25,15 +28,31 @@ public class Stream {
     }
 
     public void writeData(Object object) throws IOException {
-        objectOutputStream.reset();
+        objectOutputStream.flush();
         objectOutputStream.writeObject(object);
 
     }
 
+    public ObjectOutputStream getObjectOutputStream(){
+        return objectOutputStream;
+    }
+
+    public ObjectInputStream getObjectInputStream(){
+        return objectInputStream;
+    }
+
+    public OutputStream getOutputStream() throws IOException {
+        return socket.getOutputStream();
+    }
+
+    public InputStream getInputStream() throws IOException {
+        return socket.getInputStream();
+    }
 
     public Socket getSocket(){
         return socket;
     }
+
 
 
 }

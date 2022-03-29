@@ -12,7 +12,7 @@ import java.net.Socket;
 public class RcvMsgAction extends ClientAction{
 
 
-    public RcvMsgAction(Stream stream, User user) throws IOException {
+    public RcvMsgAction(Stream stream, String user) throws IOException {
         super(stream, user);
     }
 
@@ -20,12 +20,12 @@ public class RcvMsgAction extends ClientAction{
     public void doAction() throws IOException, ClassNotFoundException {
         System.out.println("Saisir l'id du message");
         long id = Long.parseLong(reader.readLine());
-        Request request = new RcvMsgRequest(id);
+        Request request = new RcvMsgRequest(id,userName);
         //stream.writeData(request);
-        sendPacket(request);
+        stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
 
-        Response response =  (Response) stream.getData();
-        System.out.println(response);
+        /*Response response = (Response) stream.getData();
+        System.out.println(response);*/
     }
 }

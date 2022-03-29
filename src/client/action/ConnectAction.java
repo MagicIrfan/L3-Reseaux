@@ -12,16 +12,16 @@ import java.net.Socket;
 public class ConnectAction extends ClientAction {
 
 
-    public ConnectAction(Stream stream, User user) throws IOException {
-        super(stream, user);
+    public ConnectAction(Stream stream, String userName) throws IOException {
+        super(stream, userName);
     }
 
     @Override
     public void doAction() throws IOException, ClassNotFoundException {
-        Sendable sendable = new ConnectFlux(user.getName());
-        sendPacket(sendable);
+        Sendable sendable = new ConnectFlux(userName);
+        stream.writeData(sendable);
         System.out.println("Requête envoyée : " + sendable);
-        Response response =  (Response) stream.getData();
-        System.out.println(response);
+        /*Response response = (Response) stream.getData();
+        System.out.println(response);*/
     }
 }

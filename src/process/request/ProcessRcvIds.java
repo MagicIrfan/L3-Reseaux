@@ -1,11 +1,10 @@
 package process.request;
 
-import process.request.ProcessRequest;
 import sendable.Sendable;
 import sendable.requests.RcvIdsRequest;
 import response.ListIdMsgResponse;
 import response.Response;
-import server.Database;
+import server.data.Database;
 
 import java.util.List;
 

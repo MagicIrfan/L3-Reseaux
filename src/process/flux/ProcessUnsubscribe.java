@@ -5,28 +5,29 @@ import response.ConfirmationResponse;
 import response.ErrorResponse;
 import response.Response;
 import sendable.Sendable;
-
-import java.util.List;
-import java.util.Map;
+import server.data.Database;
 
 public class ProcessUnsubscribe extends ProcessFlux{
 
     private User user2;
-    public ProcessUnsubscribe(Map<User, List<User>> subscribers,User user, User user2) {
-        super(subscribers,user);
+    public ProcessUnsubscribe(Database database,User user, User user2) {
+        super(database,user);
         this.user2 = user2;
     }
 
     @Override
     public Response getResponse(Sendable sendable) {
-        Response response = null;
-        if(subscribers.get(user).contains(user2)){
-            subscribers.get(user).remove(user2);
-            response = new ConfirmationResponse();
-        }
-        else{
-            response = new ErrorResponse(user + " n'est pas abonné à " + user2);
-        }
-        return response;
+        if(!database.containsConnectedUser(client))
+            return new ErrorResponse(client.getName()+ " n'existe pas");
+
+        if(!database.containsConnectedUser(user2))
+            return new ErrorResponse(user2.getName()+ " n'existe pas");
+
+        if(!database.subscriberExists(client, user2))
+            return new ErrorResponse(client.getName() + " n'est pas abonné à " + user2.getName());
+
+
+        database.unsubscribe(client,user2);
+        return new ConfirmationResponse();
     }
 }

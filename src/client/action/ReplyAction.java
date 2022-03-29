@@ -7,15 +7,17 @@ import sendable.requests.ReplyRequest;
 import sendable.requests.Request;
 import stream.Stream;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReplyAction extends ClientAction{
 
 
-    public ReplyAction(Stream stream, User user) throws IOException {
+    public ReplyAction(Stream stream, String user) throws IOException {
         super(stream, user);
     }
 
@@ -39,12 +41,11 @@ public class ReplyAction extends ClientAction{
 
         List<String> tags = Tags.getTags();
 
-        Request request = new ReplyRequest(since,message,user.getName(),tags);
-        //stream.writeData(request);
-        sendPacket(request);
+        Request request = new ReplyRequest(since,message,userName,tags);
+        stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
 
-        Response response =  (Response) stream.getData();
-        System.out.println(response);
+        /*Response response = (Response) stream.getData();
+        System.out.println(response);*/
     }
 }

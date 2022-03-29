@@ -1,5 +1,6 @@
 package client;
 
+import Tools.Name;
 import stream.Stream;
 
 import java.io.BufferedReader;
@@ -7,18 +8,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
 
-public abstract class Client {
+public abstract class Client  {
 
     protected final BufferedReader reader;
-    protected Stream stream;
+    protected final Stream stream;
+    protected Socket socket;
+    protected String userName;
 
     public Client() throws IOException {
         this.reader = new BufferedReader(new InputStreamReader(System.in));
         InetAddress host = InetAddress.getByName("localhost");
-        Socket socket = new Socket(host, 12345);
+        this.socket = new Socket(host, 12345);
         this.stream = new Stream(socket);
+        this.userName = Name.getName();
     }
 
-    public abstract void compute();
+    public abstract void compute() throws IOException;
+
+    public Socket getSocket(){ return socket; }
 
 }

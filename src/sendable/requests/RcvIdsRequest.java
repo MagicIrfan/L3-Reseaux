@@ -13,7 +13,7 @@ public class RcvIdsRequest extends Request{
         super("RCV_IDS" + ((author.isEmpty()) ? "" : " author:" + author)
                 + ((tags.isEmpty()) ? "" : " tag:" + tags)
                 + ((since == 0) ? "" : " since:" + since)
-                + ((limit == Long.MAX_VALUE) ? "" : " limit:" + limit), RequestName.RCV_IDS);
+                + ((limit == Long.MAX_VALUE) ? "" : " limit:" + limit), RequestName.RCV_IDS,author);
         this.author = author;
         this.tags = tags;
         this.since = since;

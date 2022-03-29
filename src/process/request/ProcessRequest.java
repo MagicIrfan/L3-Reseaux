@@ -1,9 +1,10 @@
 package process.request;
 import process.Process;
 import sendable.Sendable;
-import sendable.requests.Request;
 import response.Response;
-import server.Database;
+import server.data.Database;
+
+import java.io.IOException;
 
 public abstract class ProcessRequest implements Process {
 

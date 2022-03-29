@@ -11,14 +11,6 @@ public abstract class Response implements Serializable {
         this.body = body;
     }
 
-    public String getHeader(){
-        return header;
-    }
-
-    public String getBody(){
-        return body;
-    }
-
     public String toString(){
         return header + "\r\n" + body + "\r\n";
     }

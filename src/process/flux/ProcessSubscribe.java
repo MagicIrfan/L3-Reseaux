@@ -5,28 +5,30 @@ import response.ConfirmationResponse;
 import response.ErrorResponse;
 import response.Response;
 import sendable.Sendable;
-
-import java.util.List;
-import java.util.Map;
+import server.data.Database;
 
 public class ProcessSubscribe extends ProcessFlux{
 
     private User user2;
-    public ProcessSubscribe(Map<User, List<User>> subscribers,User user, User user2) {
-        super(subscribers,user);
+    public ProcessSubscribe(Database database, User user, User user2) {
+        super(database,user);
         this.user2 = user2;
     }
 
     @Override
     public Response getResponse(Sendable sendable) {
-        Response response = null;
-        if(subscribers.containsKey(user2)){
-            subscribers.get(user).add(user2);
-            response = new ConfirmationResponse();
-        }
-        else{
-            response = new ErrorResponse(user2 + " n'est pas géré par l'application");
-        }
-        return null;
+        if(!database.containsConnectedUser(user2))
+            return new ErrorResponse(user2.getName() + " n'est pas géré par l'application");
+
+        if(database.subscriberExists(client, user2))
+            return new ErrorResponse(client.getName() + " est déjà abonné à " + user2.getName());
+
+        if(client.getName().equals(user2.getName()))
+            return new ErrorResponse("Tu veux t'abonner à toi même ???");
+
+
+        database.subscribe(client,user2);
+        return new ConfirmationResponse();
+
     }
 }
