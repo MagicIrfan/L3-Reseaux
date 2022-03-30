@@ -17,7 +17,7 @@ public class ProcessRcvIds extends ProcessRequest {
     @Override
     public Response getResponse(Sendable receiver) {
         RcvIdsRequest receive = (RcvIdsRequest) receiver;
-        List<Long> listIDS = database.getIds(receive.getAuthor(),receive.getTags(),receive.getSince(),receive.getLimit());
+        List<Long> listIDS = database.getIds(receive.getSender(),receive.getTags(),receive.getSince(),receive.getLimit());
         return new ListIdMsgResponse(listIDS.toString());
     }
 

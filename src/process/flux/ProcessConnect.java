@@ -15,10 +15,8 @@ public class ProcessConnect extends ProcessFlux{
 
     @Override
     public Response getResponse(Sendable sendable) {
-        if(database.userExists(client)) {
-            return new ErrorResponse("L'utilisateur " + client + " est déjà connecté !");
-        }
-        else{
+        if(!database.userExists(client)) {
+            System.out.println("coucou");
             database.addUser(client);
             database.connectUser(client);
         }

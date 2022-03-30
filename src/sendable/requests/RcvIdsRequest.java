@@ -4,7 +4,6 @@ import sendable.requests.name.RequestName;
 
 public class RcvIdsRequest extends Request{
 
-    private String author;
     private String tags;
     private long since;
     private long limit;
@@ -14,15 +13,10 @@ public class RcvIdsRequest extends Request{
                 + ((tags.isEmpty()) ? "" : " tag:" + tags)
                 + ((since == 0) ? "" : " since:" + since)
                 + ((limit == Long.MAX_VALUE) ? "" : " limit:" + limit), RequestName.RCV_IDS,author);
-        this.author = author;
         this.tags = tags;
         this.since = since;
         this.limit = limit;
 
-    }
-
-    public String getAuthor(){
-        return author;
     }
 
     public String getTags(){

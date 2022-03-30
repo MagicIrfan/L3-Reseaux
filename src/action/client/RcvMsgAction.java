@@ -10,8 +10,10 @@ import java.io.IOException;
 public class RcvMsgAction extends ClientAction {
 
 
+    private String userName;
     public RcvMsgAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     @Override

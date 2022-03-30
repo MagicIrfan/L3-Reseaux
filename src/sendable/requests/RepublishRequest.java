@@ -4,7 +4,6 @@ import sendable.requests.name.RequestName;
 
 public class RepublishRequest extends Request{
 
-    private String author;
     private long id;
 
     public RepublishRequest(long id, String author) {
@@ -17,9 +16,5 @@ public class RepublishRequest extends Request{
         return id;
     }
 
-    @Override
-    public String getSender() {
-        return author;
-    }
 }
 

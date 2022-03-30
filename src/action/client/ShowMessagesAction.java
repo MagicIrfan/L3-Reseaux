@@ -9,8 +9,10 @@ import java.io.IOException;
 
 public class ShowMessagesAction extends ClientAction {
 
+    private String userName;
     public ShowMessagesAction(Stream stream, String userName) throws IOException {
-        super(stream, userName);
+        super(stream);
+        this.userName = userName;
     }
 
     @Override

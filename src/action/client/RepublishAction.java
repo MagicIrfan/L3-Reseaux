@@ -10,8 +10,10 @@ import java.io.IOException;
 public class RepublishAction extends ClientAction {
 
 
+    private String userName;
     public RepublishAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     public long processSince(String strSince){

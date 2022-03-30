@@ -10,8 +10,10 @@ import java.io.IOException;
 public class ConnectAction extends ClientAction {
 
 
+    private String userName;
     public ConnectAction(Stream stream, String userName) throws IOException {
-        super(stream, userName);
+        super(stream);
+        this.userName = userName;
     }
 
     @Override

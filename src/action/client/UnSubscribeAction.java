@@ -10,8 +10,10 @@ import java.io.IOException;
 public class UnSubscribeAction extends ClientAction {
 
 
+    private String userName;
     public UnSubscribeAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     @Override

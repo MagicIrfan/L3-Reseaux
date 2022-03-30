@@ -11,8 +11,8 @@ import java.io.IOException;
 public class RcvIdsAction extends ClientAction {
 
 
-    public RcvIdsAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+    public RcvIdsAction(Stream stream) throws IOException {
+        super(stream);
     }
 
     @Override

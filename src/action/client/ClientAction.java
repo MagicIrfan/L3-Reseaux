@@ -12,13 +12,12 @@ import java.net.Socket;
 
 public abstract class ClientAction implements Actionable {
 
-    protected Stream stream;
-    protected String userName;
-    protected final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    protected final Stream stream;
+    protected final BufferedReader reader;
 
-    public ClientAction(Stream stream,String userName) throws IOException {
+    public ClientAction(Stream stream) throws IOException {
         this.stream = stream;
-        this.userName = userName;
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
 

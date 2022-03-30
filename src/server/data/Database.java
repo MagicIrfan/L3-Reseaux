@@ -1,4 +1,5 @@
 package server.data;
+import Tools.MapUtils;
 import client.User;
 import message.Message;
 import stream.Stream;
@@ -47,6 +48,14 @@ public class Database {
 
     }
 
+    public Map<User,Integer> getNbSubscribers(){
+        Map<User,Integer> ranking = new ConcurrentSkipListMap<>();
+        for(Map.Entry<User,Deque<User>> entry : subscribers.entrySet()){
+            ranking.put(entry.getKey(),entry.getValue().size());
+        }
+        return MapUtils.sortByValue(ranking);
+    }
+
     public void addMessage(Message message){
         messages.add(message);
     }
@@ -90,6 +99,7 @@ public class Database {
     }
 
     public boolean subscriberExists(User user,User subscriber){
+        System.out.println(user);
         return subscribers.get(getConnectedUser(user)).contains(getConnectedUser(subscriber));
     }
 

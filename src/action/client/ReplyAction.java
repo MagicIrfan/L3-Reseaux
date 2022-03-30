@@ -12,8 +12,10 @@ import java.util.List;
 public class ReplyAction extends ClientAction {
 
 
+    private String userName;
     public ReplyAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     public long processSince(String strSince){

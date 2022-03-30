@@ -11,8 +11,10 @@ import java.io.IOException;
 public class SubscribeAction extends ClientAction {
 
 
+    private String userName;
     public SubscribeAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     @Override

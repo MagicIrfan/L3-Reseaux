@@ -30,7 +30,7 @@ public class ProcessPublish extends ProcessRequest {
         if(database.idExists(id))
             return new ErrorResponse("l'ID existe déjà");
 
-        Message message = new Message(id,publish.getAuthor(),publish.getBody(),publish.getTags());
+        Message message = new Message(id,publish.getSender(),publish.getBody(),publish.getTags());
         database.addMessage(message);
         database.addMessageToUser(user,message);
         database.setReceivedMessages(user);

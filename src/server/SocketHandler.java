@@ -50,7 +50,6 @@ public class SocketHandler implements Runnable{
                 String strRequest = request.getName();
                 String userName = request.getSender();
                 User user = new User(userName,socket);
-                Response response = null;
                 switch (strRequest) {
                     case "PUBLISH" -> {
                         setAction(new PublishServerAction(database,request,user,parent,stream));
@@ -93,10 +92,14 @@ public class SocketHandler implements Runnable{
                         setAction(new ShowMessagesServerAction(database,request,stream,user));
                         action.doAction();
                     }
+                    case "FAMOUSNAME" -> {
+                        setAction(new FamousUserServerAction(database,request,stream));
+                        action.doAction();
+                    }
                     default -> {}
 
                 }
-                System.out.println("Envoi de la réponse " + response);
+                System.out.println("Envoi de la réponse ");
             }
         }
         catch(IOException | ClassNotFoundException | InterruptedException e)

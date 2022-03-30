@@ -13,8 +13,10 @@ import static Tools.Tags.getTags;
 public class PublishAction extends ClientAction {
 
 
+    private String userName;
     public PublishAction(Stream stream, String user) throws IOException {
-        super(stream, user);
+        super(stream);
+        this.userName = user;
     }
 
     @Override

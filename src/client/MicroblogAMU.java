@@ -7,12 +7,30 @@ import client.threads.DataReceiver;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Classe représentant le client MicroblogAMU
+ */
 public class MicroblogAMU extends Client {
 
+    /**
+     * Permet de vérifier si le client est en marche
+     */
     private boolean isRunning;
+    /**
+     * L'action du client
+     */
     private ClientAction action;
+    /**
+     * Thread récupérant les données envoyées par le serveur
+     */
     private final DataReceiver receiver;
 
+
+    /**
+     * Constructeur de MicroblogAMU
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public MicroblogAMU() throws IOException, ClassNotFoundException {
         super();
         this.isRunning = true;
@@ -25,10 +43,13 @@ public class MicroblogAMU extends Client {
         socket.close();
     }
 
+    /**
+     *
+     * @param action
+     */
     public void setAction(ClientAction action){
         this.action = action;
     }
-
 
 
     public void compute(){
@@ -47,7 +68,7 @@ public class MicroblogAMU extends Client {
                         action.doAction();
                     }
                     case "I" -> {
-                        setAction(new RcvIdsAction(stream, userName));
+                        setAction(new RcvIdsAction(stream));
                         action.doAction();
                     }
                     case "R" -> {
@@ -68,6 +89,10 @@ public class MicroblogAMU extends Client {
                     }
                     case "C" ->{
                         setAction(new ShowMessagesAction(stream,userName));
+                        action.doAction();
+                    }
+                    case "F" ->{
+                        setAction(new FamousUserAction(stream,userName));
                         action.doAction();
                     }
                     case "Q" -> isRunning = false;
