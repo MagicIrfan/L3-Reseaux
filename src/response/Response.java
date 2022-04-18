@@ -1,7 +1,7 @@
 package response;
 
 import java.io.Serializable;
-
+//CLASSE REPRESENTANT LA REPONSE A LA REQUETE OU FLUX ENVOYEE PAR LE CLIENT
 public abstract class Response implements Serializable {
     protected String header;
     protected String body;

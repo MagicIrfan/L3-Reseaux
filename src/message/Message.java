@@ -1,7 +1,9 @@
 package message;
+import server.MicroblogAMUCentral;
+
 import java.io.Serializable;
 import java.util.*;
-
+//CLASSE REPRESENTANT UN MESSAGE
 public class Message implements Serializable {
 
     private String author;
@@ -15,6 +17,13 @@ public class Message implements Serializable {
         this.tags = tags;
         this.id = id;
 
+    }
+
+    public Message(Message message){
+        this.author = message.getAuthor();
+        this.body = message.getBody();
+        this.tags = message.getTags();
+        this.id = MicroblogAMUCentral.atomicID.getAndIncrement();
     }
 
 

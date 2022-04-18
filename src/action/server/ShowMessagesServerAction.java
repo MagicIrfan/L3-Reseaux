@@ -2,10 +2,10 @@ package action.server;
 
 import client.User;
 import process.Process;
-import process.flux.ProcessShowMsg;
+import process.request.ProcessShowMsg;
 import response.Response;
 import sendable.Sendable;
-import sendable.flux.ShowMsgFlux;
+import sendable.requests.ShowMsgFlux;
 import server.data.Database;
 import stream.Stream;
 

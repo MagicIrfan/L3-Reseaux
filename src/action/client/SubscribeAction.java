@@ -2,6 +2,7 @@ package action.client;
 
 import Tools.Name;
 import action.client.ClientAction;
+import response.Response;
 import sendable.Sendable;
 import sendable.flux.SubscribeFlux;
 import stream.Stream;
@@ -24,6 +25,8 @@ public class SubscribeAction extends ClientAction {
         Sendable flux = new SubscribeFlux(userName,receiver);
         stream.writeData(flux);
         System.out.println("Requete envoyée : " + flux);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
 
     }
 }

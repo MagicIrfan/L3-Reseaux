@@ -6,7 +6,7 @@ import server.data.Database;
 import stream.Stream;
 
 import java.io.IOException;
-
+//CLASSE ABSTRAITE REPRESENTANT L'ACTION DU SERVEUR LORSQU'IL VEUT ENVOYER UNE REPONSE
 public abstract class ServerAction implements Actionable {
 
     protected final Database database;

@@ -1,4 +1,4 @@
-package process.flux;
+package process.request;
 
 import client.User;
 import response.ListMsgResponse;
@@ -6,9 +6,13 @@ import response.Response;
 import sendable.Sendable;
 import server.data.Database;
 
-public class ProcessShowMsg extends ProcessFlux{
+public class ProcessShowMsg extends ProcessRequest{
+
+    private User client;
+
     public ProcessShowMsg(Database database, User client) {
-        super(database, client);
+        super(database);
+        this.client = client;
     }
 
     @Override

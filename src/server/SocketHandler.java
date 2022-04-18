@@ -2,26 +2,14 @@ package server;
 import java.net.*;
 
 import action.server.*;
-import client.User;;
-import message.Message;
-import process.flux.ProcessConnect;
-import process.Process;
-import process.flux.ProcessShowMsg;
-import process.flux.ProcessSubscribe;
-import process.flux.ProcessUnsubscribe;
-import process.request.*;
+import client.User;
 import sendable.Sendable;
-import response.*;
-import sendable.flux.ConnectFlux;
-import sendable.flux.ShowMsgFlux;
-import sendable.flux.SubscribeFlux;
-import sendable.flux.UnsubscribeFlux;
-import sendable.requests.RepublishRequest;
 import server.data.Database;
 import stream.Stream;
 
 import java.io.*;
 
+//PROGRAMME REPRESENTANT LES ACTIONS DU SERVEUR
 public class SocketHandler implements Runnable{
 
     private Socket socket;
@@ -29,12 +17,14 @@ public class SocketHandler implements Runnable{
     private Database database;
     private MicroblogAMUCentral parent;
     private ServerAction action;
+    private boolean isRunning;
 
     public SocketHandler(Socket socket, Database database, MicroblogAMUCentral parent) throws IOException {
         this.socket = socket;
         this.stream = new Stream(socket);
         this.database = database;
         this.parent = parent;
+        this.isRunning = true;
     }
 
     public void setAction(ServerAction action){
@@ -45,7 +35,7 @@ public class SocketHandler implements Runnable{
     public void run(){
         try
         {
-            while(true) {
+            while(isRunning) {
                 Sendable request = (Sendable) stream.getData();
                 String strRequest = request.getName();
                 String userName = request.getSender();
@@ -54,23 +44,27 @@ public class SocketHandler implements Runnable{
                     case "PUBLISH" -> {
                         setAction(new PublishServerAction(database,request,user,parent,stream));
                         action.doAction();
+                        isRunning = false;
                     }
                     case "RCV_MSG" -> {
                         setAction(new RcvMsgServerAction(database,request,stream));
                         action.doAction();
-
+                        isRunning = false;
                     }
                     case "RCV_IDS" -> {
                         setAction(new RcvIdsServerAction(database,request,stream));
                         action.doAction();
+                        isRunning = false;
                     }
                     case "REPLY" -> {
                         setAction(new ReplyServerAction(database,request,stream,user,parent));
                         action.doAction();
+                        isRunning = false;
                     }
                     case "REPUBLISH" -> {
                         setAction(new RepublishServerAction(database,request,stream,user,parent));
                         action.doAction();
+                        isRunning = false;
 
                     }
                     case "CONNECT" -> {
@@ -91,10 +85,22 @@ public class SocketHandler implements Runnable{
                     case "SHOW_MSG" -> {
                         setAction(new ShowMessagesServerAction(database,request,stream,user));
                         action.doAction();
+                        isRunning = false;
                     }
                     case "FAMOUSNAME" -> {
                         setAction(new FamousUserServerAction(database,request,stream));
                         action.doAction();
+                        isRunning = false;
+                    }
+                    case "MOST_REPUBLISHED_MSG" -> {
+                        setAction(new MostRepublishedMsgAction(database,request,stream));
+                        action.doAction();
+                        isRunning = false;
+                    }
+                    case "DISCONNECT" ->{
+                        setAction(new DisconnectServerAction(database,request,stream,user));
+                        action.doAction();
+                        isRunning = false;
                     }
                     default -> {}
 

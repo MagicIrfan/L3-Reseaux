@@ -2,6 +2,7 @@ package action.client;
 
 import Tools.CharVerificator;
 import action.client.ClientAction;
+import response.Response;
 import sendable.requests.RcvIdsRequest;
 import sendable.requests.Request;
 import stream.Stream;
@@ -58,5 +59,7 @@ public class RcvIdsAction extends ClientAction {
         Request request = new RcvIdsRequest(author,temp,since,limit);
         stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

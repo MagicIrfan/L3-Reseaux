@@ -26,13 +26,11 @@ public class ReplyServerAction extends ServerAction{
     @Override
     public void doAction() throws IOException, ClassNotFoundException, InterruptedException {
         long randomID = MicroblogAMUCentral.atomicID.getAndIncrement();
-        ProcessRequest processRequest = new ProcessReply(database, randomID);
-        Response response = processRequest.getResponse(sendable);
         User newUser = database.getConnectedUser(user);
+        ProcessRequest processRequest = new ProcessReply(database, randomID,newUser);
+        Response response = processRequest.getResponse(sendable);
         if(response instanceof ErrorResponse)
             randomID = MicroblogAMUCentral.atomicID.getAndDecrement();
-        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-            parent.sendMessagesToClient(user);
         stream.writeData(response);
     }
 }

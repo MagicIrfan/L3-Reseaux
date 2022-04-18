@@ -1,6 +1,7 @@
 package action.client;
 
 import action.client.ClientAction;
+import response.Response;
 import sendable.requests.RcvMsgRequest;
 import sendable.requests.Request;
 import stream.Stream;
@@ -24,5 +25,7 @@ public class RcvMsgAction extends ClientAction {
         //stream.writeData(request);
         stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

@@ -4,7 +4,7 @@ import java.io.*;
 
 import sendable.Sendable;
 import sendable.requests.name.RequestName;
-
+//CLASSE ABSTRAITE REPRESENTANT UNE REQUETE
 public abstract class Request implements Sendable {
     protected String header;
     protected String body;

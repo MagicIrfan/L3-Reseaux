@@ -21,7 +21,7 @@ public class FamousUserServerAction extends ServerAction{
     public void doAction() throws IOException, ClassNotFoundException, InterruptedException {
         FamousUserRequest request = (FamousUserRequest) sendable;
         ProcessRequest processRequest = new ProcessFamousUser(database);
-        Response response = processRequest.getResponse(sendable);
+        Response response = processRequest.getResponse(request);
         stream.writeData(response);
     }
 }

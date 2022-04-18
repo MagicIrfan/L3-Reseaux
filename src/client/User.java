@@ -2,7 +2,7 @@ package client;
 
 import java.io.Serializable;
 import java.net.Socket;
-
+//CLASSE REPRESENTANT L'UTILISATEUR
 public class User implements Serializable,Comparable<User> {
     private String name;
     private Socket socket;

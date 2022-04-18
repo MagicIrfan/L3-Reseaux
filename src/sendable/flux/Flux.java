@@ -2,7 +2,7 @@ package sendable.flux;
 
 import sendable.Sendable;
 import sendable.flux.name.FluxName;
-
+//CLASSE ABSTRAITE REPRESENTANT UN FLUX
 public abstract class Flux implements Sendable {
     protected String header;
     protected FluxName name;

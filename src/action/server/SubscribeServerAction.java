@@ -25,10 +25,7 @@ public class SubscribeServerAction extends ServerAction{
     public void doAction() throws IOException, ClassNotFoundException, InterruptedException {
         SubscribeFlux flux = (SubscribeFlux) sendable;
         Socket userSocket = database.getSocketWithName(flux.getReceiver());
-
         User user2 = new User(flux.getReceiver(),userSocket);
-        System.out.println("user : " + user);
-        System.out.println("user2 : " + user2);
         Process process = new ProcessSubscribe(database,user,user2);
         Response response = process.getResponse(flux);
         stream.writeData(response);

@@ -31,8 +31,6 @@ public class PublishServerAction extends ServerAction{
         Response response = process.getResponse(sendable);
         if(response instanceof ErrorResponse)
             randomID = MicroblogAMUCentral.atomicID.decrementAndGet();
-        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-            parent.sendMessagesToClient(user);
         stream.writeData(response);
     }
 }

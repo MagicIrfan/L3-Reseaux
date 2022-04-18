@@ -11,12 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+//CLASSE REPRESENTANT LA BASE DE DONNEES
 public class Database {
     private Deque<Message> messages;
     private Deque<User> listUsers;
     private ConcurrentSkipListMap<User, Deque<User>> subscribers;
     private ConcurrentHashMap<User, Deque<Message>> messagesMap;
     private ConcurrentHashMap<User, Deque<Message>> messagesToSend;
+    private ConcurrentHashMap<Long,Integer> nbOfRepublished;
 
 
     public Database(){
@@ -25,6 +27,11 @@ public class Database {
         this.subscribers = new ConcurrentSkipListMap<>();
         this.messagesMap = new ConcurrentHashMap<>();
         this.messagesToSend = new ConcurrentHashMap<>();
+        this.nbOfRepublished = new ConcurrentHashMap<>();
+    }
+
+    public ConcurrentHashMap<Long,Integer> getNbOfRepublished(){
+        return nbOfRepublished;
     }
 
     public ConcurrentHashMap<User, Deque<Message>> getReceivedMessages(){
@@ -50,14 +57,27 @@ public class Database {
 
     public Map<User,Integer> getNbSubscribers(){
         Map<User,Integer> ranking = new ConcurrentSkipListMap<>();
+
         for(Map.Entry<User,Deque<User>> entry : subscribers.entrySet()){
-            ranking.put(entry.getKey(),entry.getValue().size());
+            ranking.put(entry.getKey(),0);
         }
-        return MapUtils.sortByValue(ranking);
+
+        for(Map.Entry<User,Deque<User>> entry : subscribers.entrySet()){
+            for(Map.Entry<User,Deque<User>> entry2 : subscribers.entrySet()) {
+                Deque<User> subscribers = entry2.getValue();
+                for (User subscriber : subscribers) {
+                    if (entry.getKey().getName().equals(subscriber.getName())) {
+                        ranking.put(entry.getKey(), ranking.get(entry.getKey()) + 1);
+                    }
+                }
+            }
+        }
+        return MapUtils.sortFamousByValue(ranking);
     }
 
     public void addMessage(Message message){
         messages.add(message);
+        nbOfRepublished.put(message.getId(),0);
     }
 
     public ConcurrentHashMap<User, Deque<Message>> getMessagesMap(){
@@ -99,7 +119,6 @@ public class Database {
     }
 
     public boolean subscriberExists(User user,User subscriber){
-        System.out.println(user);
         return subscribers.get(getConnectedUser(user)).contains(getConnectedUser(subscriber));
     }
 

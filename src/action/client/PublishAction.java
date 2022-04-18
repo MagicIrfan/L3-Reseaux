@@ -1,6 +1,7 @@
 package action.client;
 
 import action.client.ClientAction;
+import response.Response;
 import sendable.requests.PublishRequest;
 import sendable.requests.Request;
 import stream.Stream;
@@ -27,6 +28,8 @@ public class PublishAction extends ClientAction {
         Request request = new PublishRequest(userName,body,tags);
         stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
 
     }
 }

@@ -1,6 +1,7 @@
 package action.client;
 
 import Tools.Name;
+import response.Response;
 import sendable.Sendable;
 import sendable.flux.UnsubscribeFlux;
 import stream.Stream;
@@ -23,5 +24,7 @@ public class UnSubscribeAction extends ClientAction {
         Sendable flux = new UnsubscribeFlux(userName,receiver);
         stream.writeData(flux);
         System.out.println("Requete envoyée : " + flux);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

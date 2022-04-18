@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
-
+//CLASSE ABSTRAITE REPRESENTANT LE CLIENT
 public abstract class Client  {
 
     protected final BufferedReader reader;
@@ -23,7 +23,7 @@ public abstract class Client  {
         this.userName = Name.getName();
     }
 
-    public abstract void compute() throws IOException;
+    public abstract void compute();
 
     public Socket getSocket(){ return socket; }
 

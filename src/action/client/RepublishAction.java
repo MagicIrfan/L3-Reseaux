@@ -1,6 +1,7 @@
 package action.client;
 
 import action.client.ClientAction;
+import response.Response;
 import sendable.requests.RepublishRequest;
 import sendable.requests.Request;
 import stream.Stream;
@@ -34,5 +35,7 @@ public class RepublishAction extends ClientAction {
         Request request = new RepublishRequest(since,userName);
         stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

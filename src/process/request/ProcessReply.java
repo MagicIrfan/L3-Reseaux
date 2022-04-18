@@ -1,5 +1,6 @@
 package process.request;
 
+import client.User;
 import message.Message;
 import sendable.Sendable;
 import sendable.requests.ReplyRequest;
@@ -12,10 +13,12 @@ public class ProcessReply extends ProcessRequest {
 
 
     private long id;
+    private User user;
 
-    public ProcessReply(Database database, long id) {
+    public ProcessReply(Database database, long id, User user) {
         super(database);
         this.id = id;
+        this.user = user;
     }
 
     @Override
@@ -28,7 +31,9 @@ public class ProcessReply extends ProcessRequest {
 
         Message message = new Message(id,replyRequest.getSender(),replyRequest.getBody(),replyRequest.getTags());
         database.addMessage(message);
-        System.out.println(message);
+        database.addMessageToUser(user,message);
+        database.setReceivedMessages(user);
+        System.out.println(message + " id:" + message.getId());
         return new ConfirmationResponse();
 
     }

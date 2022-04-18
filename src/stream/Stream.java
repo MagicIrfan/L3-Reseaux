@@ -3,6 +3,7 @@ package stream;
 import java.io.*;
 import java.net.*;
 
+//CLASSE PERMETTANT D'ENVOYER ET DE RECEVOIR DES OBJETS
 public class Stream {
 
     private final Socket socket;
@@ -28,7 +29,6 @@ public class Stream {
     }
 
     public void writeData(Object object) throws IOException {
-        objectOutputStream.flush();
         objectOutputStream.writeObject(object);
 
     }

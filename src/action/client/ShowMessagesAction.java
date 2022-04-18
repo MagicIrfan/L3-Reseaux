@@ -1,8 +1,8 @@
 package action.client;
 
-import action.client.ClientAction;
+import response.Response;
 import sendable.Sendable;
-import sendable.flux.ShowMsgFlux;
+import sendable.requests.ShowMsgFlux;
 import stream.Stream;
 
 import java.io.IOException;
@@ -20,5 +20,7 @@ public class ShowMessagesAction extends ClientAction {
         Sendable sendable = new ShowMsgFlux(userName);
         stream.writeData(sendable);
         System.out.println("Requête envoyée : " + sendable);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

@@ -1,6 +1,7 @@
 package action.client;
 
 import action.client.ClientAction;
+import response.Response;
 import sendable.Sendable;
 import sendable.flux.ConnectFlux;
 import stream.Stream;
@@ -21,5 +22,7 @@ public class ConnectAction extends ClientAction {
         Sendable sendable = new ConnectFlux(userName);
         stream.writeData(sendable);
         System.out.println("Requête envoyée : " + sendable);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

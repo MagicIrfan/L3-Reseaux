@@ -5,7 +5,7 @@ import process.Process;
 import response.Response;
 import sendable.Sendable;
 import server.data.Database;
-
+//CLASSE ABSTRAITE TRAITANT LE FLUX POUR ENVOYER LA REPONSE AU CLIENT
 public abstract class ProcessFlux implements Process {
 
     protected User client;

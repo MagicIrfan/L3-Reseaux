@@ -1,5 +1,6 @@
 package action.client;
 
+import response.Response;
 import sendable.Sendable;
 import sendable.requests.FamousUserRequest;
 import stream.Stream;
@@ -18,5 +19,8 @@ public class FamousUserAction extends ClientAction{
     public void doAction() throws IOException, ClassNotFoundException {
         Sendable request = new FamousUserRequest(userName);
         stream.writeData(request);
+        System.out.println("Requête envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

@@ -2,6 +2,7 @@ package action.client;
 
 import Tools.Tags;
 import action.client.ClientAction;
+import response.Response;
 import sendable.requests.ReplyRequest;
 import sendable.requests.Request;
 import stream.Stream;
@@ -41,5 +42,7 @@ public class ReplyAction extends ClientAction {
         Request request = new ReplyRequest(since,message,userName,tags);
         stream.writeData(request);
         System.out.println("Requete envoyée : " + request);
+        Response response = (Response) stream.getData();
+        System.out.println(response);
     }
 }

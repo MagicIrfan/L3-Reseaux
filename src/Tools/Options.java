@@ -13,6 +13,7 @@ public class Options {
                 B - Se désabonner à un utilisateur
                 C - Afficher les messages contenues dans la boîte de réception
                 F - Afficher les utilisateurs les plus populaires
+                E - Afficher les message les plus republiés
                 Q - Quitter""";
     }
 }

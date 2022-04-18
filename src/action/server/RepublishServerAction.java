@@ -25,11 +25,9 @@ public class RepublishServerAction extends ServerAction{
     @Override
     public void doAction() throws IOException, ClassNotFoundException, InterruptedException {
         RepublishRequest flux = (RepublishRequest) sendable;
-        ProcessRequest processRequest = new ProcessRepublish(database);
-        Response response = processRequest.getResponse(flux);
         User newUser = database.getConnectedUser(user);
-        if(response instanceof ConfirmationResponse && !database.getMessagesMap().get(newUser).isEmpty())
-            parent.sendMessagesToClient(user);
+        ProcessRequest processRequest = new ProcessRepublish(database,newUser);
+        Response response = processRequest.getResponse(flux);
         stream.writeData(response);
     }
 }
